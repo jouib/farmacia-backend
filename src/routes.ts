@@ -19,7 +19,7 @@ router.post("/clientes", ClienteController.novo);
 router.get("/produtos", ProdutoController.todos);
 router.get("/produtos/alerta", ProdutoController.alerta);
 router.post("/produtos", ProdutoController.novo);
-router.put("/produtos/:id", ProdutoController.atualizar);
+router.put("/produtos/:idProduto", ProdutoController.atualizar);
 
 // PEDIDO
 // PEDIDOS  (ordem importa!)

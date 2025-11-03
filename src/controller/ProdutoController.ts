@@ -48,9 +48,16 @@ class ProdutoController extends Produto {
 
     static async atualizar(req: Request, res: Response): Promise<Response> {
         try {
-            const idProduto = Number(req.params.id);
+            const idProdutoParam = req.params.idProduto;
+            const idProduto = Number(idProdutoParam);
+
+            if (isNaN(idProduto)) {
+                return res.status(400).json({ erro: 'ID do produto inválido' });
+            }
+
             const campos = req.body;
             const atualizado = await Produto.atualizarProduto(idProduto, campos);
+            console.log(idProduto, campos);
 
             if (atualizado) {
                 return res.status(200).json({ mensagem: "Produto atualizado com sucesso." });
