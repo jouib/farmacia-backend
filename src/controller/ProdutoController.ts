@@ -1,9 +1,11 @@
 import { Produto } from "../model/Produto.js";
 import type { Request, Response } from "express";
+import { DatabaseModel } from '../model/DatabaseModel.js';
 
+const database = new DatabaseModel();
 
 interface ProdutoDTO {
-    idProduto: number;
+    idProduto: number;  
     descricao: string;
     validade: Date | null;
     preco: number;
@@ -78,6 +80,18 @@ class ProdutoController extends Produto {
             return res.status(500).json({ mensagem: "Erro ao atualizar produto." });
         }
     }
-}
 
+    static async deletarProduto(id: number): Promise<boolean> {
+        try {
+            const queryDelete = `DELETE FROM cliente WHERE id_cliente = $1;`;
+            const result = await database.pool.query(queryDelete, [id]);
+
+            return (result.rowCount ?? 0) > 0;
+        } catch (error) {
+            console.error(`Erro ao deletar cliente: ${error}`);
+            return false;
+        }
+  }
+
+}
 export default ProdutoController;

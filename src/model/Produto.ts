@@ -220,4 +220,30 @@ export class Produto {
       return false;
     }
   }
+
+  static async removerProduto(idProduto: number): Promise<boolean> {
+    let  queryResult = false;
+    try {
+      const queryDeleteParticipacaoTrabalho = `
+      DELETE FROM produto
+      WHERE id_produto = $1;
+    `;
+    await database.query(queryDeleteParticipacaoTrabalho, [idProduto]);
+
+    const queryDeleteTrabalho = `
+      DELETE FROM produto
+      WHERE id_produto = $1;
+    `;
+    const result = await database.query(queryDeleteTrabalho, [idProduto]);
+
+    if (result.rowCount && result.rowCount > 0) {
+      queryResult = true;
+    }
+
+    return queryResult;
+    } catch (error) {
+      console.error(`Erro ao remover o produto: ${error}`);
+      return queryResult;
+    }
+  }
 }

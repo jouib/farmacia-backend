@@ -20,6 +20,7 @@ router.get("/produtos", ProdutoController.todos);
 router.get("/produtos/alerta", ProdutoController.alerta);
 router.post("/produtos", ProdutoController.novo);
 router.put("/produtos/:idProduto", ProdutoController.atualizar);
+router.delete("/produtos/:id", ProdutoController.deletarProduto);
 
 // ========================================================================
 // ROTAS DE PEDIDOS E ITENS DE PEDIDO
