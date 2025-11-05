@@ -41,7 +41,7 @@ router.get("/pedidos/:id/itens", PedidoController.itens);
 
 // Adiciona um novo item a um pedido existente.
 // Exemplo: POST /pedidos/5/itens
-// Corpo (Body JSON): { "id_produto": 3, "quantidade": 2, "preco_unit": 9.90 }
+// Corpo (Body JSON): { "idProduto": 3, "qtdProduto": 2, "precoUnit": 9.90 }
 // Insere um registro na tabela itens_pedido vinculado ao pedido com id = 5.
 router.post("/pedidos/:id/itens", PedidoController.novoItem);
 
@@ -52,7 +52,7 @@ router.get("/pedidos/:id", PedidoController.obter);
 
 // Cria um novo pedido.
 // Exemplo: POST /pedidos
-// Corpo (Body JSON): { "id_cliente": 2, "data": "2025-11-03", "status": "aberto" }
+// Corpo (Body JSON): { "idCliente": 2, "dataVenda": "2025-11-03" }
 // Cria um registro na tabela pedidos.
 router.post("/pedidos", PedidoController.novo);
 
@@ -74,10 +74,10 @@ router.get("/itens/:idVenda", ItemPedidoController.todos);
 // Exemplo: POST /itens
 // Corpo (Body JSON):
 // {
-//   "id_venda": 12,
-//   "id_produto": 5,
-//   "quantidade": 3,
-//   "preco_unit": 9.90
+//   "idVenda": 12,
+//   "idProduto": 5,
+//   "qtdProduto": 3,
+//   "precoUnit": 9.90
 // }
 // Cria um novo registro na tabela itens_pedido vinculando o produto à venda.
 router.post("/itens", ItemPedidoController.novo);
@@ -88,7 +88,7 @@ router.post("/itens", ItemPedidoController.novo);
 // Corpo (Body JSON):
 // {
 //   "quantidade": 4,
-//   "preco_unit": 10.00
+//   "precoUnit": 10.00
 // }
 // Atualiza o item do produto 5 dentro da venda 12 na tabela itens_pedido.
 router.put("/itens/:idVenda/:idProduto", ItemPedidoController.atualizar);

@@ -51,19 +51,27 @@ CREATE TABLE item_venda (
 CREATE OR REPLACE FUNCTION fn_baixa_estoque()
 RETURNS TRIGGER AS $$
 DECLARE
-  linhas_atualizadas INTEGER;
+  linhas_atualizadas INTEGER := 0;
 BEGIN
-  -- Debita o estoque somente se houver quantidade suficiente
+  -- 1) Validação explícita dos campos obrigatórios
+  IF NEW.id_produto IS NULL OR NEW.qtd_produto IS NULL THEN
+    RAISE EXCEPTION 'Campos obrigatórios ausentes em item_venda (id_produto ou qtd_produto).'
+      USING DETAIL = 'Verifique o JSON enviado para /itens ou /pedidos (lista de itens).',
+            HINT   = 'Ex.: {"id_produto":1,"quantidade":2,"preco_unit":9.90}';
+  END IF;
+
+  -- 2) Tenta debitar o estoque apenas se houver quantidade suficiente
   UPDATE produto
      SET qtd_estoque = qtd_estoque - NEW.qtd_produto
    WHERE id_produto = NEW.id_produto
-     AND qtd_estoque >= NEW.qtd_produto
-  RETURNING 1 INTO linhas_atualizadas;
+     AND qtd_estoque >= NEW.qtd_produto;
 
-  IF linhas_atualizadas IS NULL THEN
-    RAISE EXCEPTION
-      USING MESSAGE = 'Estoque insuficiente para o produto ' || NEW.id_produto,
-            DETAIL  = 'qtd solicitada=' || NEW.qtd_produto;
+  GET DIAGNOSTICS linhas_atualizadas = ROW_COUNT;
+
+  -- 3) Se nenhuma linha foi atualizada, não havia estoque suficiente
+  IF linhas_atualizadas = 0 THEN
+    RAISE EXCEPTION 'Estoque insuficiente para o produto %', NEW.id_produto
+      USING DETAIL = format('qtd solicitada=%s', COALESCE(NEW.qtd_produto::text, '0'));
   END IF;
 
   RETURN NEW;
