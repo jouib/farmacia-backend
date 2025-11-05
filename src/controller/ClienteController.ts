@@ -1,6 +1,13 @@
 import { Cliente } from "../model/Cliente.js";
 import type { Request, Response } from "express";
 
+
+interface ClienteDTO {
+    idCliente: number;
+    nome: string;
+    cpf: string;
+}
+
 class ClienteController extends Cliente {
 
     static async todos(req: Request, res: Response): Promise<Response> {
@@ -18,6 +25,12 @@ class ClienteController extends Cliente {
     static async novo(req: Request, res: Response): Promise<Response> {
         try {
             const dadosRecebidosCliente = req.body;
+
+            const novoCliente = new Cliente(
+                dadosRecebidosCliente.nome,
+                dadosRecebidosCliente.cpf
+            );
+
             const respostaModelo = await Cliente.cadastrarCliente(dadosRecebidosCliente);
 
             if (respostaModelo) {

@@ -1,6 +1,13 @@
 import { Pedido, type ItemDTO } from "../model/Pedido.js";
 import type { Request, Response } from "express";
 
+
+interface PedidoDTO {
+    idProduto: number;
+    qtdProduto: number;
+    precoUnit: number;
+}
+
 class PedidoController extends Pedido {
 
   static async todos(req: Request, res: Response): Promise<any> {
